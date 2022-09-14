@@ -17,22 +17,24 @@ fn main() {
     let callback = move |event: Event| {
         if event.name.is_some() {
             let key = event.name.unwrap();
-            if obj.contains_key(key.as_str()) {
-                let from_json = obj.get(key.as_str()).unwrap();
-                let to_int: u32 = from_json.to_string().parse().unwrap();
+            if key.is_ascii() {
+                if obj.contains_key(key.as_str()) {
+                    let from_json = obj.get(key.as_str()).unwrap();
+                    let to_int: u32 = from_json.to_string().parse().unwrap();
 
-                obj.insert(key, Value::from(to_int + 1));
-            } else {
-                obj.insert(key, Value::from(1));
-            }
+                    obj.insert(key, Value::from(to_int + 1));
+                } else {
+                    obj.insert(key, Value::from(1));
+                }
 
 
-            fs::write(
-                FILENAME,
-                serde_json::to_string_pretty(&obj).unwrap(),
-            ).expect("Unable write to file");
-            // println!("{:?}", obj);
-        };
+                fs::write(
+                    FILENAME,
+                    serde_json::to_string_pretty(&obj).unwrap(),
+                ).expect("Unable write to file");
+                // println!("{:?}", obj);
+            };
+        }
     };
 
     // This will block.
